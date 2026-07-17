@@ -1,0 +1,23 @@
+# 1. Gunakan image resmi Python yang stabil sebagai dasar
+FROM python:3.10-slim
+
+# 2. Atur folder kerja di dalam container virtual
+WORKDIR /app
+
+# 3. Instal dependensi sistem operasi (penting untuk OpenCV & MediaPipe)
+RUN apt-get update && apt-get install -y \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+# 4. Salin file daftar library ke dalam container
+COPY requirements.txt .
+
+# 5. Instal library Python yang dibutuhkan
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 6. Salin seluruh kode inti Anda ke dalam container
+COPY . .
+
+# 7. Perintah untuk menjalankan proyek saat container dinyalakan
+CMD ["python", "main.py"]
